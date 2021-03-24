@@ -1,4 +1,7 @@
 myproject/local_settings.py
+myproject/__pycache__/
 venv/
 ..gitignore.swp
 .idea/
+ingoodhands/__pycache__/
+ingoodhands/migrations/__pycache__/
