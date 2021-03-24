@@ -1,4 +1,4 @@
+myproject/local_settings.py
 venv/
 ..gitignore.swp
 .idea/
-myproject/local_settings
