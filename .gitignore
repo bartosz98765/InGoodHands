@@ -5,3 +5,4 @@ venv/
 .idea/
 ingoodhands/__pycache__/
 ingoodhands/migrations/__pycache__/
+__pycache__/
