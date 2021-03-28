@@ -39,7 +39,7 @@ class LoginForm(forms.Form):
 
 
 class DonationForm(ModelForm):
-    categories = forms.ModelMultipleChoiceField(queryset=Category.objects.all(), widget=forms.CheckboxSelectMultiple)
+    categories = forms.ModelMultipleChoiceField(queryset=Category.objects.all(), widget=forms.CheckboxSelectMultiple())
     institution = forms.ModelChoiceField(queryset=Institution.objects.none())
 
     class Meta:
