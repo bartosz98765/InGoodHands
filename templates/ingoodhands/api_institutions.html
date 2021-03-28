@@ -1,7 +1,8 @@
+{% if institutions %}
 {% for institution in institutions %}
     <div class="form-group form-group--checkbox">
         <label>
-            <input type="radio" data-institution="{{ institution.name }}" name="institution" value="{{ institution.id }}"/>
+            <input type="radio" id="id_institution_0" name="institution" value="{{ institution.id }}"/>
             <span class="checkbox radio"></span>
             <span class="description">
                 <div class="title">{{ institution.name }}</div>
@@ -10,3 +11,6 @@
         </label>
     </div>
 {% endfor %}
+{% else %}
+    <h1 style="color: darkred">Kategoria nie została wybrana! Wróć do kroku pierwszego.</h1>
+{% endif %}

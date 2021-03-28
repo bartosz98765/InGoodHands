@@ -280,18 +280,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function make_summary() {
-        let bags = document.getElementById("bags").value;
+        let bags = document.getElementById("id_quantity").value;
         let institution = document.querySelector('input[name="institution"]:checked').getAttribute('data-institution');
         document.getElementById("summary_bags").innerHTML = bags + " worki zawierające";
         document.getElementById("summary_institution").innerHTML = 'Dla: ' + institution;
         let address = document.getElementById('summary_address')
-        address.firstElementChild.innerHTML = document.getElementById('address').value
-        address.firstElementChild.nextElementSibling.innerHTML = document.getElementById('city').value
-        address.firstElementChild.nextElementSibling.nextElementSibling.innerHTML = document.getElementById('postcode').value
-        address.lastElementChild.innerHTML = document.getElementById('phone').value
+        address.firstElementChild.innerHTML = document.getElementById('id_address').value
+        address.firstElementChild.nextElementSibling.innerHTML = document.getElementById('id_city').value
+        address.firstElementChild.nextElementSibling.nextElementSibling.innerHTML = document.getElementById('id_zip_code').value
+        address.lastElementChild.innerHTML = document.getElementById('id_phone_number').value
         let data = document.getElementById('summary_data')
-        data.firstElementChild.innerHTML = document.getElementById('data').value
-        data.firstElementChild.nextElementSibling.innerHTML = document.getElementById('time').value
-        data.lastElementChild.innerHTML = document.getElementById('more_info').value
+        data.firstElementChild.innerHTML = document.getElementById('id_pick_up_date').value
+        data.firstElementChild.nextElementSibling.innerHTML = document.getElementById('id_pick_up_time').value
+        data.lastElementChild.innerHTML = document.getElementById('id_pick_up_comment').value
     }
 });

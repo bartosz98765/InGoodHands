@@ -104,8 +104,8 @@ class RegisterView(View):
 
 def get_inst_by_cat(request):
     inst_ids = request.GET.getlist('inst_ids')
-    if inst_ids is not None:
+    if inst_ids != []:
         institutions = Institution.objects.filter(categories__in=inst_ids).distinct()
     else:
-        institutions = "Wróć do kroku pierwszego i wybierz kategorie, by zobaczyć instytucje"
+        institutions = []
     return render(request, 'ingoodhands/api_institutions.html', {'institutions': institutions})

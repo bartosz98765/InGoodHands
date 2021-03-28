@@ -39,20 +39,17 @@ class LoginForm(forms.Form):
 
 
 class DonationForm(ModelForm):
-    categories = forms.ModelMultipleChoiceField(queryset=Category.objects.all(), widget=forms.CheckboxSelectMultiple())
-    institution = forms.ModelChoiceField(queryset=Institution.objects.none())
+    institution = forms.ModelChoiceField(queryset=Institution.objects.all(), widget=forms.RadioSelect())
 
     class Meta:
         model = Donation
         exclude = ('user',)
-
-    # quantity = forms.IntegerField()
-    # categories = forms.ModelMultipleChoiceField(queryset=Category.objects.all())
-    # institution = forms.ModelChoiceField(queryset=Institution.objects.)
-    # phone_number = models.CharField(max_length=12
-    # city = models.CharField(max_length=24)
-    # zip_code = models.CharField(max_length=6)
-    # pick_up_date = models.DateField()
-    # pick_up_time = models.TimeField()
-    # pick_up_comment = models.CharField(max_length
-    # user = models.ForeignKey(User, default=None,
+        widgets = {
+            'categories': forms.CheckboxSelectMultiple(),
+            'quantity': forms.NumberInput(attrs={'min': 1, 'max': '60'}),
+            'zip_code': forms.TextInput(),
+            'phone_number': forms.NumberInput(),
+            'pick_up_date': forms.DateInput(),
+            'pick_up_time': forms.TimeInput(),
+            'pick_up_comment': forms.Textarea(attrs={'rows': 5}),
+        }
