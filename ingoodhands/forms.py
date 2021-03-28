@@ -1,7 +1,7 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from ingoodhands.models import Category, Institution
 
 
 def username_unique(username):
@@ -35,3 +35,16 @@ class LoginForm(forms.Form):
                                widget=forms.TextInput(attrs={'placeholder': 'Email'}))
     password = forms.CharField(min_length=8,
                                widget=forms.PasswordInput(attrs={'placeholder': 'Hasło'}))
+
+
+# class DonationForm(forms.Form):
+#     quantity = forms.IntegerField()
+#     categories = forms.ModelMultipleChoiceField(queryset=Category.objects.all())
+#     institution = forms.ModelChoiceField(queryset=Institution.objects.)
+#     phone_number = models.CharField(max_length=12
+#     city = models.CharField(max_length=24)
+#     zip_code = models.CharField(max_length=6)
+#     pick_up_date = models.DateField()
+#     pick_up_time = models.TimeField()
+#     pick_up_comment = models.CharField(max_length
+#     user = models.ForeignKey(User, default=None,

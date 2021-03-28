@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Category(models.Model):
     name = models.CharField(max_length=64)
 
@@ -18,6 +19,7 @@ class Institution(models.Model):
     description = models.TextField(max_length=1000)
     type = models.CharField(choices=ORG_TYPES, max_length=5, default='FOUND')
     categories = models.ManyToManyField(Category)
+
 
 class Donation(models.Model):
     quantity = models.IntegerField()

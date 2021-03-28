@@ -1,9 +1,10 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.views import View
-from ingoodhands.models import Donation, Institution
+from ingoodhands.models import Donation, Institution, Category
 from ingoodhands.forms import RegisterForm, LoginForm
 
 
@@ -13,6 +14,7 @@ class LandingPageView(View):
         user = request.user
 
         institutions = Institution.objects.all()
+        donations = Donation.objects.all()
         foundations_list = institutions.filter(type='FOUND')
         organizations = institutions.filter(type='ORG')
         locals = institutions.filter(type='LOCAL')
@@ -24,8 +26,8 @@ class LandingPageView(View):
 
         ctx = {'title': 'HOME',
                'header_template': 'ingoodhands/header.html',
-               'bags_quantity': sum([el.quantity for el in Donation.objects.all()]),
-               'institutions_quantity': institutions.count(),
+               'bags_quantity': sum([el.quantity for el in donations]),
+               'institutions_quantity': len(list(set([r.institution for r in donations]))),
                'foundations': foundations,
                'organizations': organizations,
                'locals': locals,
@@ -35,11 +37,19 @@ class LandingPageView(View):
         return render(request, 'ingoodhands/index.html', ctx)
 
 
-class AddDonationView(View):
+class AddDonationView(PermissionRequiredMixin, View):
+    permission_required = 'ingoodhands.add_donation'
 
     def get(self, request):
-        ctx = {'title': 'DANATION', 'header_template': 'ingoodhands/header.html'}
+        institutions = "Nie wybrane"
+        ctx = {'title': 'DANATION',
+               'header_template': 'ingoodhands/header.html',
+               'categories': Category.objects.all(),
+               'institutions': institutions
+               }
         return render(request, 'ingoodhands/form.html', ctx)
+
+
 
 
 class LoginView(View):
@@ -69,10 +79,11 @@ class LoginView(View):
         ctx = {'title': 'LOGIN', 'header_template': 'ingoodhands/header.html', 'form': form}
         return render(request, 'ingoodhands/login.html', ctx)
 
-class LogoutView(View):
-    def get(self):
-        return 
 
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('index')
 
 
 class RegisterView(View):
@@ -95,3 +106,12 @@ class RegisterView(View):
         else:
             ctx = {'title': 'REGISTER', 'header_template': 'ingoodhands/header.html', 'form': form}
             return render(request, 'ingoodhands/register.html', ctx)
+
+
+def get_inst_by_cat(request):
+    inst_ids = request.GET.getlist('inst_ids')
+    if inst_ids is not None:
+        institutions = Institution.objects.filter(categories__in=inst_ids).distinct()
+    else:
+        institutions = "Wróć do kroku pierwszego i wybierz kategorie, by zobaczyć instytucje"
+    return render(request, 'api_institutions.html', {'institutions': institutions})
