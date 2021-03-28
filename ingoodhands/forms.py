@@ -1,7 +1,8 @@
 from django import forms
+from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from ingoodhands.models import Category, Institution
+from ingoodhands.models import Category, Institution, Donation
 
 
 def username_unique(username):
@@ -37,14 +38,21 @@ class LoginForm(forms.Form):
                                widget=forms.PasswordInput(attrs={'placeholder': 'Hasło'}))
 
 
-# class DonationForm(forms.Form):
-#     quantity = forms.IntegerField()
-#     categories = forms.ModelMultipleChoiceField(queryset=Category.objects.all())
-#     institution = forms.ModelChoiceField(queryset=Institution.objects.)
-#     phone_number = models.CharField(max_length=12
-#     city = models.CharField(max_length=24)
-#     zip_code = models.CharField(max_length=6)
-#     pick_up_date = models.DateField()
-#     pick_up_time = models.TimeField()
-#     pick_up_comment = models.CharField(max_length
-#     user = models.ForeignKey(User, default=None,
+class DonationForm(ModelForm):
+    categories = forms.ModelMultipleChoiceField(queryset=Category.objects.all(), widget=forms.CheckboxSelectMultiple)
+    institution = forms.ModelChoiceField(queryset=Institution.objects.none())
+
+    class Meta:
+        model = Donation
+        exclude = ('user',)
+
+    # quantity = forms.IntegerField()
+    # categories = forms.ModelMultipleChoiceField(queryset=Category.objects.all())
+    # institution = forms.ModelChoiceField(queryset=Institution.objects.)
+    # phone_number = models.CharField(max_length=12
+    # city = models.CharField(max_length=24)
+    # zip_code = models.CharField(max_length=6)
+    # pick_up_date = models.DateField()
+    # pick_up_time = models.TimeField()
+    # pick_up_comment = models.CharField(max_length
+    # user = models.ForeignKey(User, default=None,

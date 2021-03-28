@@ -59,8 +59,10 @@
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
             <h3>Zaznacz co chcesz oddać:</h3>
-
-            {% for category in categories %}
+{#              <div class="form-group form-group--checkbox">#}
+{#                {{ form.categories }}#}
+{#              </div>#}
+            {% for category in form.fields.categories %}
             <div class="form-group form-group--checkbox">
               <label>
                 <input type="checkbox" class="checkboxes" name="category" value="{{ category.id }}"/>

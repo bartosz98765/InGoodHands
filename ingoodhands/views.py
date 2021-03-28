@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.views import View
 from ingoodhands.models import Donation, Institution, Category
-from ingoodhands.forms import RegisterForm, LoginForm
+from ingoodhands.forms import RegisterForm, LoginForm, DonationForm
 
 
 class LandingPageView(View):
@@ -41,15 +41,9 @@ class AddDonationView(PermissionRequiredMixin, View):
     permission_required = 'ingoodhands.add_donation'
 
     def get(self, request):
-        institutions = "Nie wybrane"
-        ctx = {'title': 'DANATION',
-               'header_template': 'ingoodhands/header.html',
-               'categories': Category.objects.all(),
-               'institutions': institutions
-               }
+        form = DonationForm()
+        ctx = {'title': 'DANATION', 'header_template': 'ingoodhands/header.html', 'form': form}
         return render(request, 'ingoodhands/form.html', ctx)
-
-
 
 
 class LoginView(View):
@@ -114,4 +108,4 @@ def get_inst_by_cat(request):
         institutions = Institution.objects.filter(categories__in=inst_ids).distinct()
     else:
         institutions = "Wróć do kroku pierwszego i wybierz kategorie, by zobaczyć instytucje"
-    return render(request, 'api_institutions.html', {'institutions': institutions})
+    return render(request, 'ingoodhands/api_institutions.html', {'institutions': institutions})
