@@ -45,6 +45,25 @@ class AddDonationView(PermissionRequiredMixin, View):
         ctx = {'title': 'DANATION', 'header_template': 'ingoodhands/header.html', 'form': form}
         return render(request, 'ingoodhands/form.html', ctx)
 
+    def post(self, request):
+        form = DonationForm(request.POST)
+        if form.is_valid():
+            new_donation = form.save()
+            new_donation.user = request.user
+            new_donation.save()
+            return redirect('confirmation-view')
+        else:
+            ctx = {'title': 'DANATION', 'header_template': 'ingoodhands/header.html', 'form': form}
+            return render(request, 'ingoodhands/form.html', ctx)
+
+
+class ConfirmationView(PermissionRequiredMixin, View):
+    permission_required = 'ingoodhands.add_donation'
+
+    def get(self, request):
+        ctx = {'title': 'DANATION', 'header_template': 'ingoodhands/header.html'}
+        return render(request, 'ingoodhands/form-confirmation.html', ctx)
+
 
 class LoginView(View):
 

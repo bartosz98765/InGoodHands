@@ -54,7 +54,7 @@
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
 
-        <form method="post">
+        <form id="donation_form" method="post">
         {% csrf_token %}
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
@@ -187,16 +187,16 @@
                 <div class="form-section--column">
                   <h4>Adres odbioru:</h4>
                   <ul id="summary_address">
-                    <li>Prosta 51</li>
-                    <li>Warszawa</li>
-                    <li>99-098</li>
-                    <li>123 456 789</li>
+                    <li>Podaj ulicę!</li>
+                    <li>Podaj miasto!</li>
+                    <li>Podaj kod w formacie: XX-XXX!</li>
+                    <li>Podaj nr telefonu</li>
                   </ul>
                 </div>
 
                 <div class="form-section--column">
                   <h4>Termin odbioru:</h4>
-                  <ul id="summary_data">
+                  <ul id="summary_date">
                     <li>13/12/2018</li>
                     <li>15:40</li>
                     <li>Brak uwag</li>

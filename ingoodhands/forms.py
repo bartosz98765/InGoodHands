@@ -48,8 +48,8 @@ class DonationForm(ModelForm):
             'categories': forms.CheckboxSelectMultiple(),
             'quantity': forms.NumberInput(attrs={'min': 1, 'max': '60'}),
             'zip_code': forms.TextInput(),
-            'phone_number': forms.NumberInput(),
-            'pick_up_date': forms.DateInput(),
-            'pick_up_time': forms.TimeInput(),
+            'phone_number': forms.TextInput(),
+            'pick_up_date': forms.DateInput(attrs={'type': 'date'}),
+            'pick_up_time': forms.TimeInput(attrs={'type': 'time'}),
             'pick_up_comment': forms.Textarea(attrs={'rows': 5}),
         }
