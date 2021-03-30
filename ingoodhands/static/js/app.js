@@ -293,12 +293,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.getElementById("summary_bags").innerHTML = bags + " worki zawierające";
         document.getElementById("summary_institution").innerHTML = 'Dla: ' + institution;
-        
+
+        let error = "<p style='color: darkred'>UZUPEŁNIJ DANE!</p>"
+
         let address = document.getElementById('summary_address')
-        street !== "" ? address.firstElementChild.innerHTML = street : address.firstElementChild.innerHTML = "Podaj ulicę!"
+        street !== "" ? address.firstElementChild.innerHTML = street : address.firstElementChild.innerHTML = error
         address.firstElementChild.nextElementSibling.innerHTML = city
         address.firstElementChild.nextElementSibling.nextElementSibling.innerHTML = zip_code
         address.lastElementChild.innerHTML = phone_number
+
+        // street !== "" ? result === street : result === error
+        // address.firstElementChild.innerHTML = result
+        // city !== "" ? result === city : result === "<p style='color: darkred'>PODAJ MIASTO!</p>";
+        // address.firstElementChild.nextElementSibling.innerHTML = result;
+        // street !== "" ? result === street : result === "<p style='color: darkred'>PODAJ KOD!</p>";
+        // address.firstElementChild.nextElementSibling.nextElementSibling.innerHTML = result;
+        // street !== "" ? result === street : result === "<p style='color: darkred'>PODAJ NUMER TELEFONU!</p>";
+        // address.lastElementChild.innerHTML = result;
+
 
         let date = document.getElementById('summary_date')
         date.firstElementChild.innerHTML = pick_up_date

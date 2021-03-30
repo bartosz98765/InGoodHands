@@ -59,9 +59,6 @@
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
             <h3>Zaznacz co chcesz oddać:</h3>
-{#              <div class="form-group form-group--checkbox">#}
-{#                {{ form.categories }}#}
-{#              </div>#}
             {% for category in form.categories %}
             <div class="form-group form-group--checkbox">
               <label>
@@ -71,7 +68,6 @@
               </label>
             </div>
             {% endfor %}
-
             <div class="form-group form-group--buttons">
               <button type="button" class="btn next-step">Dalej</button>
             </div>
@@ -85,10 +81,6 @@
                 <label>
                 {{ form.quantity.label }}{{ form.quantity }}
                 </label>
-{#              <label>#}
-{#                Liczba 60l worków:#}
-{#                <input type="number" id="bags" name="bags" step="1" min="1">#}
-{#              </label>#}
             </div>
 
             <div class="form-group form-group--buttons">
