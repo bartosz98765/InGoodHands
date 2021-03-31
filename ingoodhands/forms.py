@@ -1,7 +1,8 @@
 from django import forms
+from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from ingoodhands.models import Category, Institution
+from ingoodhands.models import Category, Institution, Donation
 
 
 def username_unique(username):
@@ -37,14 +38,18 @@ class LoginForm(forms.Form):
                                widget=forms.PasswordInput(attrs={'placeholder': 'Hasło'}))
 
 
-# class DonationForm(forms.Form):
-#     quantity = forms.IntegerField()
-#     categories = forms.ModelMultipleChoiceField(queryset=Category.objects.all())
-#     institution = forms.ModelChoiceField(queryset=Institution.objects.)
-#     phone_number = models.CharField(max_length=12
-#     city = models.CharField(max_length=24)
-#     zip_code = models.CharField(max_length=6)
-#     pick_up_date = models.DateField()
-#     pick_up_time = models.TimeField()
-#     pick_up_comment = models.CharField(max_length
-#     user = models.ForeignKey(User, default=None,
+class DonationForm(ModelForm):
+    institution = forms.ModelChoiceField(queryset=Institution.objects.all(), widget=forms.RadioSelect())
+
+    class Meta:
+        model = Donation
+        exclude = ('user',)
+        widgets = {
+            'categories': forms.CheckboxSelectMultiple(),
+            'quantity': forms.NumberInput(attrs={'min': 1, 'max': '60'}),
+            'zip_code': forms.TextInput(),
+            'phone_number': forms.TextInput(),
+            'pick_up_date': forms.DateInput(attrs={'type': 'date'}),
+            'pick_up_time': forms.TimeInput(attrs={'type': 'time'}),
+            'pick_up_comment': forms.Textarea(attrs={'rows': 5}),
+        }

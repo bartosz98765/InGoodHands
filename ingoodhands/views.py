@@ -4,8 +4,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.generic import DetailView
 from ingoodhands.models import Donation, Institution, Category
-from ingoodhands.forms import RegisterForm, LoginForm
+from ingoodhands.forms import RegisterForm, LoginForm, DonationForm
 
 
 class LandingPageView(View):
@@ -41,15 +42,28 @@ class AddDonationView(PermissionRequiredMixin, View):
     permission_required = 'ingoodhands.add_donation'
 
     def get(self, request):
-        institutions = "Nie wybrane"
-        ctx = {'title': 'DANATION',
-               'header_template': 'ingoodhands/header.html',
-               'categories': Category.objects.all(),
-               'institutions': institutions
-               }
+        form = DonationForm()
+        ctx = {'title': 'DANATION', 'header_template': 'ingoodhands/header.html', 'form': form}
         return render(request, 'ingoodhands/form.html', ctx)
 
+    def post(self, request):
+        form = DonationForm(request.POST)
+        if form.is_valid():
+            new_donation = form.save()
+            new_donation.user = request.user
+            new_donation.save()
+            return redirect('confirmation-view')
+        else:
+            ctx = {'title': 'DANATION', 'header_template': 'ingoodhands/header.html', 'form': form}
+            return render(request, 'ingoodhands/form.html', ctx)
 
+
+class ConfirmationView(PermissionRequiredMixin, View):
+    permission_required = 'ingoodhands.add_donation'
+
+    def get(self, request):
+        ctx = {'title': 'DANATION', 'header_template': 'ingoodhands/header.html'}
+        return render(request, 'ingoodhands/form-confirmation.html', ctx)
 
 
 class LoginView(View):
@@ -108,10 +122,26 @@ class RegisterView(View):
             return render(request, 'ingoodhands/register.html', ctx)
 
 
+class ProfileView(DetailView):
+    model = User
+    template_name = 'ingoodhands/profile.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['header_template'] = 'ingoodhands/header.html'
+        user_donation = Donation.objects.filter(user=self.object.pk)
+        ctx['user_donation'] = user_donation
+        return ctx
+
+
 def get_inst_by_cat(request):
     inst_ids = request.GET.getlist('inst_ids')
-    if inst_ids is not None:
-        institutions = Institution.objects.filter(categories__in=inst_ids).distinct()
+    if inst_ids != []:
+        institutions = []
+        inst = Institution.objects.filter(categories__in=inst_ids)
+        for el in set(inst):
+            if inst.filter(pk=el.pk).count() == len(inst_ids):
+                institutions.append(el)
     else:
-        institutions = "Wróć do kroku pierwszego i wybierz kategorie, by zobaczyć instytucje"
-    return render(request, 'api_institutions.html', {'institutions': institutions})
+        institutions = []
+    return render(request, 'ingoodhands/api_institutions.html', {'institutions': institutions})

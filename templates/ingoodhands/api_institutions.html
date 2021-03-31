@@ -1,3 +1,4 @@
+{% if institutions %}
 {% for institution in institutions %}
     <div class="form-group form-group--checkbox">
         <label>
@@ -10,3 +11,6 @@
         </label>
     </div>
 {% endfor %}
+{% else %}
+    <h1 style="color: darkred">Kategoria nie została wybrana! Wróć do kroku pierwszego.</h1>
+{% endif %}

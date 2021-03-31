@@ -247,9 +247,10 @@ document.addEventListener("DOMContentLoaded", function () {
          * TODO: validation, send data to server
          */
         submit(e) {
-            e.preventDefault();
-            this.currentStep++;
-            this.updateForm();
+            // e.preventDefault();
+            document.forms['donation_form'].submit();
+            // this.currentStep++;
+            // this.updateForm();
         }
     }
 
@@ -280,18 +281,40 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function make_summary() {
-        let bags = document.getElementById("bags").value;
+        let bags = document.getElementById("id_quantity").value;
         let institution = document.querySelector('input[name="institution"]:checked').getAttribute('data-institution');
+        let street = document.getElementById('id_address').value
+        let city = document.getElementById('id_city').value
+        let zip_code = document.getElementById('id_zip_code').value
+        let phone_number = document.getElementById('id_phone_number').value
+        let pick_up_date = document.getElementById('id_pick_up_date').value
+        let pick_up_time = document.getElementById('id_pick_up_time').value
+        let pick_up_comment = document.getElementById('id_pick_up_comment').value
+
         document.getElementById("summary_bags").innerHTML = bags + " worki zawierające";
         document.getElementById("summary_institution").innerHTML = 'Dla: ' + institution;
+
+        let error = "<p style='color: darkred'>UZUPEŁNIJ DANE!</p>"
+
         let address = document.getElementById('summary_address')
-        address.firstElementChild.innerHTML = document.getElementById('address').value
-        address.firstElementChild.nextElementSibling.innerHTML = document.getElementById('city').value
-        address.firstElementChild.nextElementSibling.nextElementSibling.innerHTML = document.getElementById('postcode').value
-        address.lastElementChild.innerHTML = document.getElementById('phone').value
-        let data = document.getElementById('summary_data')
-        data.firstElementChild.innerHTML = document.getElementById('data').value
-        data.firstElementChild.nextElementSibling.innerHTML = document.getElementById('time').value
-        data.lastElementChild.innerHTML = document.getElementById('more_info').value
+        street !== "" ? address.firstElementChild.innerHTML = street : address.firstElementChild.innerHTML = error
+        address.firstElementChild.nextElementSibling.innerHTML = city
+        address.firstElementChild.nextElementSibling.nextElementSibling.innerHTML = zip_code
+        address.lastElementChild.innerHTML = phone_number
+
+        // street !== "" ? result === street : result === error
+        // address.firstElementChild.innerHTML = result
+        // city !== "" ? result === city : result === "<p style='color: darkred'>PODAJ MIASTO!</p>";
+        // address.firstElementChild.nextElementSibling.innerHTML = result;
+        // street !== "" ? result === street : result === "<p style='color: darkred'>PODAJ KOD!</p>";
+        // address.firstElementChild.nextElementSibling.nextElementSibling.innerHTML = result;
+        // street !== "" ? result === street : result === "<p style='color: darkred'>PODAJ NUMER TELEFONU!</p>";
+        // address.lastElementChild.innerHTML = result;
+
+
+        let date = document.getElementById('summary_date')
+        date.firstElementChild.innerHTML = pick_up_date
+        date.firstElementChild.nextElementSibling.innerHTML = pick_up_time
+        date.lastElementChild.innerHTML = pick_up_comment
     }
 });
