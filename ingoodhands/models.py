@@ -21,6 +21,9 @@ class Institution(models.Model):
     type = models.CharField(choices=ORG_TYPES, max_length=5, default='FOUND')
     categories = models.ManyToManyField(Category)
 
+    def __str__(self):
+        return f'{self.get_type_display()}: {self.name}'.title()
+
 
 class Donation(models.Model):
     quantity = models.IntegerField(verbose_name='Liczba 60l worków: ',

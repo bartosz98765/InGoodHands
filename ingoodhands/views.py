@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.generic import DetailView
 from ingoodhands.models import Donation, Institution, Category
 from ingoodhands.forms import RegisterForm, LoginForm, DonationForm
 
@@ -119,6 +120,18 @@ class RegisterView(View):
         else:
             ctx = {'title': 'REGISTER', 'header_template': 'ingoodhands/header.html', 'form': form}
             return render(request, 'ingoodhands/register.html', ctx)
+
+
+class ProfileView(DetailView):
+    model = User
+    template_name = 'ingoodhands/profile.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['header_template'] = 'ingoodhands/header.html'
+        user_donation = Donation.objects.filter(user=self.object.pk)
+        ctx['user_donation'] = user_donation
+        return ctx
 
 
 def get_inst_by_cat(request):

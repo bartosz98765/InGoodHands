@@ -1,0 +1,38 @@
+{% extends 'ingoodhands/base.html' %}
+{% block content %}
+    <header>
+        {% include header_template %}
+    </header>
+    <section class="login-page">
+        <div style="font-size: 2rem">
+            {{ object.first_name }} {{ object.last_name }} {{ object.username }}
+        </div>
+        <div><br></div>
+        <table style="font-size: 1.5rem; text-align: center">
+            <thead>
+            <tr>
+                <th colspan="5">TWOJE DAROWIZY</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Lp.</th>
+                    <th>Worki</th>
+                    <th>Instytucja</th>
+                    <th>W kategoriach</th>
+                    <th>Obiór</th>
+                </tr>
+        {% for donation in user_donation %}
+                <tr>
+                    <td>1</td>
+                    <td>{{ donation.quantity }}</td>
+                    <td>{{ donation.institution.name }}</td>
+                    <td>{{ donation.categories.all|join:", " }}</td>
+                    <td>{{ donation.pick_up_date }} {{ donation.pick_up_time }}</td>
+                </tr>
+        {% endfor %}
+            </tbody>
+        </table>
+        <h2></h2>
+    </section>
+{% endblock %}
