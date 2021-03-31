@@ -38,3 +38,4 @@ class Donation(models.Model):
     pick_up_time = models.TimeField(verbose_name='Godzina')
     pick_up_comment = models.CharField(max_length=128, verbose_name='Uwagi dla kuriera')
     user = models.ForeignKey(User, default=None, null=True, on_delete=models.PROTECT)
+    is_taken = models.BooleanField(default=False)

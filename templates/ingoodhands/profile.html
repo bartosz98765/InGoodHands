@@ -17,14 +17,14 @@
             <tbody>
                 <tr>
                     <th>Lp.</th>
-                    <th>Worki</th>
+                    <th>Liczba worków</th>
                     <th>Instytucja</th>
                     <th>W kategoriach</th>
                     <th>Obiór</th>
                 </tr>
         {% for donation in user_donation %}
                 <tr>
-                    <td>1</td>
+                    <td>{{ forloop.counter }}</td>
                     <td>{{ donation.quantity }}</td>
                     <td>{{ donation.institution.name }}</td>
                     <td>{{ donation.categories.all|join:", " }}</td>

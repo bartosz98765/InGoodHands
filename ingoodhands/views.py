@@ -129,7 +129,7 @@ class ProfileView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['header_template'] = 'ingoodhands/header.html'
-        user_donation = Donation.objects.filter(user=self.object.pk)
+        user_donation = Donation.objects.filter(user=self.object.pk).order_by('-pick_up_date')
         ctx['user_donation'] = user_donation
         return ctx
 
