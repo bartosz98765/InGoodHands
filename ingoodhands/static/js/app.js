@@ -317,4 +317,6 @@ document.addEventListener("DOMContentLoaded", function () {
         date.firstElementChild.nextElementSibling.innerHTML = pick_up_time
         date.lastElementChild.innerHTML = pick_up_comment
     }
+
+    // document.querySelector('input[type=checkbox][name=is_taken]').onclick = function () {}
 });

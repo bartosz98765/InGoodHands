@@ -3,36 +3,49 @@
     <header>
         {% include header_template %}
     </header>
-    <section class="login-page">
-        <div style="font-size: 2rem">
-            {{ object.first_name }} {{ object.last_name }} {{ object.username }}
+    <section>
+        <br>
+        <div style="font-size: 2rem; text-align: center">
+            {{ user.first_name }} {{ user.last_name }} {{ user.username }}
         </div>
         <div><br></div>
-        <table style="font-size: 1.5rem; text-align: center">
-            <thead>
-            <tr>
-                <th colspan="5">TWOJE DAROWIZY</th>
-            </tr>
-            </thead>
-            <tbody>
+        <form method="post">
+            {% csrf_token %}
+            <table style="font-size: 1.5rem; text-align: center; margin-left: auto; margin-right: auto; width: 75%">
+                <thead>
+                <tr>
+                    <th colspan="5" style="font-size: 2rem">TWOJE DAROWIZY</th>
+                </tr>
+                </thead>
+                <tbody>
                 <tr>
                     <th>Lp.</th>
                     <th>Liczba worków</th>
                     <th>Instytucja</th>
                     <th>W kategoriach</th>
-                    <th>Obiór</th>
+                    <th>Data odbioru</th>
+                    <th>Odebrane?</th>
                 </tr>
-        {% for donation in user_donation %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ donation.quantity }}</td>
-                    <td>{{ donation.institution.name }}</td>
-                    <td>{{ donation.categories.all|join:", " }}</td>
-                    <td>{{ donation.pick_up_date }} {{ donation.pick_up_time }}</td>
-                </tr>
-        {% endfor %}
-            </tbody>
-        </table>
+                {% for donation in user_donations %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ donation.quantity }}</td>
+                      <td>{{ donation.institution.name }}</td>
+                      <td>{{ donation.categories.all|join:", " }}</td>
+                      <td>{{ donation.pick_up_date }} {{ donation.pick_up_time }}</td>
+                      <td>
+                      <div class="form-group form-group--checkbox">
+                      <label>
+                          <input type="submit" name="is_taken" value="{{ donation.pk }}">
+                          <span class="checkbox" style="width: 100%">{{ donation.is_taken|yesno:"TAK, NIE" }}</span>
+                      </label>
+                      </div>
+                      </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </form>
         <h2></h2>
     </section>
 {% endblock %}

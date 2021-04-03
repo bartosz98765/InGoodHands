@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.hashers import check_password
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -36,6 +37,46 @@ class LoginForm(forms.Form):
                                widget=forms.TextInput(attrs={'placeholder': 'Email'}))
     password = forms.CharField(min_length=8,
                                widget=forms.PasswordInput(attrs={'placeholder': 'Hasło'}))
+
+
+class UserUpdateForm(ModelForm):
+    username = forms.CharField(min_length=3, max_length=64, widget=forms.EmailInput())
+
+    first_name = forms.CharField(min_length=3,
+                                 widget=forms.TextInput(attrs={'placeholder': 'Imię'}),
+                                 max_length=24)
+    last_name = forms.CharField(min_length=3,
+                                widget=forms.TextInput(attrs={'placeholder': 'Nazwisko'}),
+                                max_length=30)
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Podaj aktualne hasło'}))
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'confirm_password']
+
+    def clean(self):
+        cleaned_data = super(UserUpdateForm, self).clean()
+        confirm_password = cleaned_data.get('confirm_password')
+        if not check_password(confirm_password, self.instance.password):
+            self.add_error('confirm_password', 'Błędne hasło')
+
+
+class PasswordChangeForm(ModelForm):
+    actual_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': "Aktualne hasło"}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Nowe hasło'}))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Powtórz hasło'}))
+
+    class Meta:
+        model = User
+        fields = ['actual_password', 'password', 'password2']
+
+    def clean(self):
+        cleaned_data = super(PasswordChangeForm, self).clean()
+        actual_password = cleaned_data.get('actual_password')
+        if not check_password(actual_password, self.instance.password):
+            self.add_error('actual_password', 'Błędne hasło')
+        if cleaned_data['password'] != cleaned_data['password2']:
+            raise ValidationError('Hasła nie są takie same')
 
 
 class DonationForm(ModelForm):
