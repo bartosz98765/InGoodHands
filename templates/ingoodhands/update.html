@@ -1,0 +1,19 @@
+{% extends 'ingoodhands/base.html' %}
+{% block content %}
+
+    <header>
+        {% include header_template %}
+    </header>
+
+<h1>Zmiana danych</h1>
+<form action="{% url 'userupdate-view' user.pk %}" method="post">{% csrf_token %}
+    {{ userupdate_form }}
+    <input type="submit" value="Zmień dane">
+</form>
+<h1>Zmiana hasła</h1>
+<form action="{% url 'passwordchange-view' user.pk %}" method="post">{% csrf_token %}
+    {{ passwordchange_form }}
+<input type="submit" value="Zmień hasło">
+</form>
+
+{% endblock %}

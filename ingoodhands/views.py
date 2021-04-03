@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, reverse
 from django.views import View
-from django.views.generic import DetailView, UpdateView, FormView
+from django.views.generic import DetailView, UpdateView, FormView, TemplateView
 from ingoodhands.models import Donation, Institution, Category
 from ingoodhands.forms import RegisterForm, LoginForm, DonationForm, UserUpdateForm, PasswordChangeForm
 
@@ -169,12 +169,27 @@ class PasswordChangeView(LoginRequiredMixin, UpdateView):
         ctx['header_template'] = 'ingoodhands/header.html'
         return ctx
 
+
     def form_valid(self, form):
         new_password = form.cleaned_data['password']
         if new_password != '':
             self.object.set_password(new_password)
         self.object.save()
         return redirect('passwordchange-view', pk=self.object.pk)
+
+
+class ChangeView(TemplateView):
+    template_name = 'ingoodhands/update.html'
+
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(pk=self.kwargs['pk'])
+        userupdate_form = UserUpdateForm(self.request.GET or None, instance=user)
+        passwordchange_form = PasswordChangeForm(self.request.GET or None)
+        context = self.get_context_data(**kwargs)
+        context['userupdate_form'] = userupdate_form
+        context['passwordchange_form'] = passwordchange_form
+        context['header_template'] = 'ingoodhands/header.html'
+        return self.render_to_response(context)
 
 
 def get_inst_by_cat(request):
