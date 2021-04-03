@@ -1,12 +1,12 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.views import View
-from django.views.generic import DetailView
+from django.views.generic import DetailView, UpdateView, FormView
 from ingoodhands.models import Donation, Institution, Category
-from ingoodhands.forms import RegisterForm, LoginForm, DonationForm
+from ingoodhands.forms import RegisterForm, LoginForm, DonationForm, UserUpdateForm, PasswordChangeForm
 
 
 class LandingPageView(View):
@@ -122,16 +122,59 @@ class RegisterView(View):
             return render(request, 'ingoodhands/register.html', ctx)
 
 
-class ProfileView(DetailView):
+class ProfileView(LoginRequiredMixin, View):
+
+    def get(self, request, pk):
+        user = User.objects.get(pk=pk)
+        user_donations = Donation.objects.filter(user=user).order_by('-pick_up_date')
+        donation_true = []
+        donation_false = []
+        for el in user_donations:
+            donation_true.append(el) if el.is_taken else donation_false.append(el)
+        user_donations = donation_false + donation_true
+        ctx = {'user_donations': user_donations, 'header_template': 'ingoodhands/header.html', 'user': user}
+        return render(request, 'ingoodhands/profile.html', ctx)
+
+    def post(self, request, pk):
+        donation = Donation.objects.get(pk=request.POST['is_taken'])
+        donation.is_taken = not donation.is_taken
+        donation.save()
+        return redirect('profile-view', pk=pk)
+
+
+class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
-    template_name = 'ingoodhands/profile.html'
+    form_class = UserUpdateForm
+    template_name = 'ingoodhands/user_update.html'
+
+    def get_success_url(self):
+        return reverse('userupdate-view', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['header_template'] = 'ingoodhands/header.html'
-        user_donation = Donation.objects.filter(user=self.object.pk).order_by('-pick_up_date')
-        ctx['user_donation'] = user_donation
         return ctx
+
+
+class PasswordChangeView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = PasswordChangeForm
+    template_name = 'ingoodhands/password_update.html'
+
+    def get_success_url(self):
+        return reverse('passwordchange-view', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['header_template'] = 'ingoodhands/header.html'
+        return ctx
+
+    def form_valid(self, form):
+        new_password = form.cleaned_data['password']
+        if new_password != '':
+            self.object.set_password(new_password)
+        self.object.save()
+        return redirect('passwordchange-view', pk=self.object.pk)
 
 
 def get_inst_by_cat(request):
