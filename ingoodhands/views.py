@@ -145,51 +145,71 @@ class ProfileView(LoginRequiredMixin, View):
 class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserUpdateForm
-    template_name = 'ingoodhands/user_update.html'
+    template_name = 'ingoodhands/update.html'
 
     def get_success_url(self):
         return reverse('userupdate-view', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
+        user = User.objects.get(pk=self.kwargs['pk'])
+        userupdate_form = UserUpdateForm(instance=user)
+        passwordchange_form = PasswordChangeForm()
+        ctx = super(UserUpdateView, self).get_context_data(**kwargs)
+        # form = kwargs.get('form')
+        # if form:
+        #     prefix = form.prefix
+        ctx['userupdate_form'] = userupdate_form
+        ctx['passwordchange_form'] = passwordchange_form
         ctx['header_template'] = 'ingoodhands/header.html'
         return ctx
+
+    # def form_invalid(self, form):
+    #     return self.render_to_response(self.get_context_data(form=form))
 
 
 class PasswordChangeView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = PasswordChangeForm
-    template_name = 'ingoodhands/password_update.html'
+    template_name = 'ingoodhands/update.html'
 
-    def get_success_url(self):
-        return reverse('passwordchange-view', kwargs={'pk': self.object.pk})
+    # def get_success_url(self):
+    #     return reverse('change-view', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
+        user = User.objects.get(pk=self.kwargs['pk'])
+        userupdate_form = UserUpdateForm(instance=user)
+        passwordchange_form = PasswordChangeForm()
+        ctx = super(PasswordChangeView, self).get_context_data(**kwargs)
+        ctx['userupdate_form'] = userupdate_form
+        ctx['passwordchange_form'] = passwordchange_form
         ctx['header_template'] = 'ingoodhands/header.html'
         return ctx
-
 
     def form_valid(self, form):
         new_password = form.cleaned_data['password']
         if new_password != '':
             self.object.set_password(new_password)
         self.object.save()
+        self.object = authenticate(username=self.object.username, password=new_password)
+        login(self.request, self.object)
         return redirect('passwordchange-view', pk=self.object.pk)
 
+    # def form_invalid(self, form):
+    #     return self.render_to_response(self.get_context_data(form=form))
 
-class ChangeView(TemplateView):
-    template_name = 'ingoodhands/update.html'
 
-    def get(self, request, *args, **kwargs):
-        user = User.objects.get(pk=self.kwargs['pk'])
-        userupdate_form = UserUpdateForm(self.request.GET or None, instance=user)
-        passwordchange_form = PasswordChangeForm(self.request.GET or None)
-        context = self.get_context_data(**kwargs)
-        context['userupdate_form'] = userupdate_form
-        context['passwordchange_form'] = passwordchange_form
-        context['header_template'] = 'ingoodhands/header.html'
-        return self.render_to_response(context)
+# class ChangeView(LoginRequiredMixin, TemplateView):
+#     template_name = 'ingoodhands/update.html'
+#
+#     def get(self, request, *args, **kwargs):
+#         user = User.objects.get(pk=self.kwargs['pk'])
+#         userupdate_form = UserUpdateForm(instance=user)
+#         passwordchange_form = PasswordChangeForm()
+#         context = self.get_context_data(**kwargs)
+#         context['userupdate_form'] = userupdate_form
+#         context['passwordchange_form'] = passwordchange_form
+#         context['header_template'] = 'ingoodhands/header.html'
+#         return self.render_to_response(context)
 
 
 def get_inst_by_cat(request):

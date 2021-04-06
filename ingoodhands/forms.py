@@ -48,7 +48,8 @@ class UserUpdateForm(ModelForm):
     last_name = forms.CharField(min_length=3,
                                 widget=forms.TextInput(attrs={'placeholder': 'Nazwisko'}),
                                 max_length=30)
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Podaj aktualne hasło'}))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Aktualne hasło'}))
+    prefix = 'user_update'
 
     class Meta:
         model = User
@@ -65,6 +66,7 @@ class PasswordChangeForm(ModelForm):
     actual_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': "Aktualne hasło"}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Nowe hasło'}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Powtórz hasło'}))
+    prefix = 'password_change'
 
     class Meta:
         model = User
