@@ -16,10 +16,8 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login-view'),
     path('logout/', LogoutView.as_view(), name='logout-view'),
     path('register/', RegisterView.as_view(), name='register-view'),
-    path('profile/<int:pk>/', ProfileView.as_view(), name='profile-view'),
+    path('profile/', ProfileView.as_view(), name='profile-view'),
     path('userupdate/<int:pk>/', UserUpdateView.as_view(), name='userupdate-view'),
     path('passwordchange/<int:pk>/', PasswordChangeView.as_view(), name='passwordchange-view'),
     path('get_inst_by_cat/', views.get_inst_by_cat, name='get_inst_by_cat'),
-    # path('changeview/<int:pk>/', ChangeView.as_view(), name='change-view'),
-    # path('taken/<int:pk>/', views.taken_donation, name='taken-view'),
 ]

@@ -60,7 +60,7 @@ inst_6 = Institution.objects.create(
     name="Fundacja “Skrzywdzeni”",
     description="Cel i misja: Pomagamy osobom, których doświadczył los",
 )
-inst_6.categories.add(category_1, category_2, category_3, category_4, category_5, category_6, category_7)
+inst_6.categories.add(category_1, category_4, category_5, category_6, category_7)
 
 
 inst_7 = Institution.objects.create(
@@ -101,7 +101,7 @@ inst_12 = Institution.objects.create(
     name="Fundacja “Skrzywdzeni 2”",
     description="Cel i misja: Pomagamy osobom, których doświadczył los",
 )
-inst_12.categories.add(category_1, category_2, category_3, category_4, category_5, category_6, category_7)
+inst_12.categories.add(category_1, category_4, category_5, category_6, category_7)
 
 inst_13 = Institution.objects.create(
     name="Fundacja “Bez domu 3”",
@@ -113,7 +113,7 @@ inst_14 = Institution.objects.create(
     name="Fundacja “Skrzywdzeni 3”",
     description="Cel i misja: Pomagamy osobom, których doświadczył los",
 )
-inst_14.categories.add(category_1, category_2, category_3, category_4, category_5, category_6, category_7)
+inst_14.categories.add(category_1, category_4, category_5, category_6, category_7)
 
 
 
@@ -147,7 +147,7 @@ donation_2 = Donation.objects.create(
     zip_code="00-000",
     pick_up_date="2021-02-05",
     pick_up_time="4:00",
-    pick_up_comment="Proszę być punktualnie",
+    pick_up_comment="",
 )
 donation_2.categories.add(category_2, category_3)
 
@@ -158,22 +158,22 @@ donation_3 = Donation.objects.create(
     phone_number="123-456-789",
     city="Warszawa",
     zip_code="00-000",
-    pick_up_date="2021-02-05",
+    pick_up_date="2021-02-07",
     pick_up_time="10:10",
-    pick_up_comment="Proszę być punktualnie",
+    pick_up_comment="Nie mam uwag",
 )
 donation_3.categories.add(category_2)
 
 donation_4 = Donation.objects.create(
     quantity=1,
-    institution=inst_1,
+    institution=inst_4,
     address="Główna 1",
-    phone_number="123-456-789",
+    phone_number="111-222-333",
     city="Warszawa",
     zip_code="00-000",
-    pick_up_date="2021-01-05",
+    pick_up_date="2021-01-15",
     pick_up_time="18:50",
-    pick_up_comment="Proszę być punktualnie",
+    pick_up_comment="Proszę zaparkować na chodniku",
 )
 donation_4.categories.add(category_1, category_2)
 
@@ -181,11 +181,11 @@ donation_5 = Donation.objects.create(
     quantity=1,
     institution=inst_3,
     address="Główna 1",
-    phone_number="123-456-789",
+    phone_number="333-222-444",
     city="Warszawa",
     zip_code="00-000",
     pick_up_date="2021-03-05",
     pick_up_time="12:00",
-    pick_up_comment="Proszę być punktualnie",
+    pick_up_comment="Czekam cierpliwie",
 )
 donation_5.categories.add(category_5)

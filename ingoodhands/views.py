@@ -4,8 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, reverse
 from django.views import View
-from django.views.generic import DetailView, UpdateView, FormView, TemplateView
-from ingoodhands.models import Donation, Institution, Category
+from django.views.generic import UpdateView
+from ingoodhands.models import Donation, Institution
 from ingoodhands.forms import RegisterForm, LoginForm, DonationForm, UserUpdateForm, PasswordChangeForm
 
 
@@ -124,8 +124,8 @@ class RegisterView(View):
 
 class ProfileView(LoginRequiredMixin, View):
 
-    def get(self, request, pk):
-        user = User.objects.get(pk=pk)
+    def get(self, request):
+        user = request.user
         user_donations = Donation.objects.filter(user=user).order_by('-pick_up_date')
         donation_true = []
         donation_false = []
@@ -135,11 +135,11 @@ class ProfileView(LoginRequiredMixin, View):
         ctx = {'user_donations': user_donations, 'header_template': 'ingoodhands/header.html', 'user': user}
         return render(request, 'ingoodhands/profile.html', ctx)
 
-    def post(self, request, pk):
+    def post(self, request):
         donation = Donation.objects.get(pk=request.POST['is_taken'])
         donation.is_taken = not donation.is_taken
         donation.save()
-        return redirect('profile-view', pk=pk)
+        return redirect('profile-view', pk=request.user.pk)
 
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
@@ -155,25 +155,16 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
         userupdate_form = UserUpdateForm(instance=user)
         passwordchange_form = PasswordChangeForm()
         ctx = super(UserUpdateView, self).get_context_data(**kwargs)
-        # form = kwargs.get('form')
-        # if form:
-        #     prefix = form.prefix
         ctx['userupdate_form'] = userupdate_form
         ctx['passwordchange_form'] = passwordchange_form
         ctx['header_template'] = 'ingoodhands/header.html'
         return ctx
-
-    # def form_invalid(self, form):
-    #     return self.render_to_response(self.get_context_data(form=form))
 
 
 class PasswordChangeView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = PasswordChangeForm
     template_name = 'ingoodhands/update.html'
-
-    # def get_success_url(self):
-    #     return reverse('change-view', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         user = User.objects.get(pk=self.kwargs['pk'])
@@ -194,32 +185,18 @@ class PasswordChangeView(LoginRequiredMixin, UpdateView):
         login(self.request, self.object)
         return redirect('passwordchange-view', pk=self.object.pk)
 
-    # def form_invalid(self, form):
-    #     return self.render_to_response(self.get_context_data(form=form))
-
-
-# class ChangeView(LoginRequiredMixin, TemplateView):
-#     template_name = 'ingoodhands/update.html'
-#
-#     def get(self, request, *args, **kwargs):
-#         user = User.objects.get(pk=self.kwargs['pk'])
-#         userupdate_form = UserUpdateForm(instance=user)
-#         passwordchange_form = PasswordChangeForm()
-#         context = self.get_context_data(**kwargs)
-#         context['userupdate_form'] = userupdate_form
-#         context['passwordchange_form'] = passwordchange_form
-#         context['header_template'] = 'ingoodhands/header.html'
-#         return self.render_to_response(context)
-
 
 def get_inst_by_cat(request):
-    inst_ids = request.GET.getlist('inst_ids')
-    if inst_ids != []:
-        institutions = []
-        inst = Institution.objects.filter(categories__in=inst_ids)
-        for el in set(inst):
-            if inst.filter(pk=el.pk).count() == len(inst_ids):
-                institutions.append(el)
+    if request.user.has_perm('ingoodhands.add_donation'):
+        inst_ids = request.GET.getlist('inst_ids')
+        if inst_ids != []:
+            institutions = []
+            inst = Institution.objects.filter(categories__in=inst_ids)
+            for el in set(inst):
+                if inst.filter(pk=el.pk).count() == len(inst_ids):
+                    institutions.append(el)
+        else:
+            institutions = []
+        return render(request, 'ingoodhands/api_institutions.html', {'institutions': institutions})
     else:
-        institutions = []
-    return render(request, 'ingoodhands/api_institutions.html', {'institutions': institutions})
+        raise Exception('Brak uprawnień!')
