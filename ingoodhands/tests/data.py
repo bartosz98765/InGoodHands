@@ -1,3 +1,10 @@
+USERS = (
+    ('Jan', 'Kowalski', 'jan@moj.pl', 'Mojehaslo1', 'Mojehaslo1'),
+    ('Ewa', 'Niwińska', 'ewa@poczta.pl', 'Mojehaslo1', 'Mojehaslo1'),
+    ('Tadeusz', 'Malinowski', 'tedeusz_1@moj.pl', 'Mojehaslo1', 'Mojehaslo1'),
+    ('Sylwia', 'Adamska', 'sylwia@moj.pl', 'Mojehaslo1', 'Mojehaslo1'),
+)
+
 CATEGORIES = (
     "zabawki",
     "ubrania",
@@ -82,7 +89,8 @@ DONATIONS = (
     "2021-01-21",
     "14:00",
     "Proszę być punktualnie",
-    ('zabawki', 'ubrania')
+    ('zabawki', 'ubrania'),
+    'jan@moj.pl',
      ),
     (2,
     'Zbieramy dla Kowalskich"',
@@ -93,7 +101,8 @@ DONATIONS = (
     "2021-05-12",
     "11:45",
     "Czekam cierpliwie",
-    ('przybory szkolne', 'meble')
+    ('przybory szkolne', 'meble'),
+    'ewa@poczta.pl',
      ),
     (10,
      'Organizacja “Dla dzieci"',
@@ -104,7 +113,8 @@ DONATIONS = (
      "2021-03-23",
      "16:45",
      "Brak uwag",
-     ('zabawki', 'ubrania', 'jedzenie')
+     ('zabawki', 'ubrania', 'jedzenie'),
+     'jan@moj.pl',
      ),
     (3,
      'Organizacja "Pomagamy starszym ludziom"',
@@ -115,9 +125,9 @@ DONATIONS = (
      "2021-04-30",
      "20:45",
      "Ciężkie worki",
-     ('jedzenie', 'ubrania')
+     ('jedzenie', 'ubrania'),
+     'tedeusz_1@moj.pl',
      ),
-
     (12,
      'Zbiórka lokalna "My dzieciom_2"',
      'Śliska 1',
@@ -127,7 +137,8 @@ DONATIONS = (
      "2021-10-01",
      "09:00",
      "Proszę być punktualnie",
-     ('zabawki', 'ubrania')
+     ('zabawki', 'ubrania'),
+     'ewa@poczta.pl',
      ),
     (6,
      'Zbieramy dla Kowalskich_2"',
@@ -138,7 +149,8 @@ DONATIONS = (
      "2021-09-11",
      "12:50",
      "Czekam cierpliwie",
-     ('przybory szkolne', 'meble')
+     ('przybory szkolne', 'meble'),
+     'ewa@poczta.pl',
      ),
     (1,
      'Organizacja “Dla dzieci"',
@@ -149,7 +161,8 @@ DONATIONS = (
      "2021-04-01",
      "10:45",
      "Brak uwag",
-     ('zabawki', 'ubrania', 'jedzenie')
+     ('zabawki', 'ubrania', 'jedzenie'),
+     'tedeusz_1@moj.pl',
      ),
     (11,
      'Organizacja "Pomagamy starszym ludziom"',
@@ -160,6 +173,7 @@ DONATIONS = (
      "2021-07-22",
      "08:45",
      "Ciężkie worki",
-     ('jedzenie', 'ubrania')
+     ('jedzenie', 'ubrania'),
+     'sylwia@moj.pl',
      ),
 )

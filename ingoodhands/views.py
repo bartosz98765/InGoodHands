@@ -63,7 +63,7 @@ class ConfirmationView(PermissionRequiredMixin, View):
 
     def get(self, request):
         ctx = {'title': 'DANATION', 'header_template': 'ingoodhands/header.html'}
-        return render(request, 'ingoodhands/form-confirmation.html', ctx)
+        return render(request, 'ingoodhands/confirmation.html', ctx)
 
 
 class LoginView(View):
@@ -139,7 +139,7 @@ class ProfileView(LoginRequiredMixin, View):
         donation = Donation.objects.get(pk=request.POST['is_taken'])
         donation.is_taken = not donation.is_taken
         donation.save()
-        return redirect('profile-view', pk=request.user.pk)
+        return redirect('profile-view')
 
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
@@ -147,11 +147,14 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
     form_class = UserUpdateForm
     template_name = 'ingoodhands/update.html'
 
+    def get_object(self, queryset=None):
+        return self.request.user
+
     def get_success_url(self):
-        return reverse('userupdate-view', kwargs={'pk': self.object.pk})
+        return reverse('userupdate-view')
 
     def get_context_data(self, **kwargs):
-        user = User.objects.get(pk=self.kwargs['pk'])
+        user = self.request.user
         userupdate_form = UserUpdateForm(instance=user)
         passwordchange_form = PasswordChangeForm()
         ctx = super(UserUpdateView, self).get_context_data(**kwargs)
@@ -166,8 +169,11 @@ class PasswordChangeView(LoginRequiredMixin, UpdateView):
     form_class = PasswordChangeForm
     template_name = 'ingoodhands/update.html'
 
+    def get_object(self, queryset=None):
+        return self.request.user
+
     def get_context_data(self, **kwargs):
-        user = User.objects.get(pk=self.kwargs['pk'])
+        user = self.request.user
         userupdate_form = UserUpdateForm(instance=user)
         passwordchange_form = PasswordChangeForm()
         ctx = super(PasswordChangeView, self).get_context_data(**kwargs)
@@ -183,7 +189,7 @@ class PasswordChangeView(LoginRequiredMixin, UpdateView):
         self.object.save()
         self.object = authenticate(username=self.object.username, password=new_password)
         login(self.request, self.object)
-        return redirect('passwordchange-view', pk=self.object.pk)
+        return redirect('passwordchange-view')
 
 
 def get_inst_by_cat(request):
@@ -199,4 +205,4 @@ def get_inst_by_cat(request):
             institutions = []
         return render(request, 'ingoodhands/api_institutions.html', {'institutions': institutions})
     else:
-        raise Exception('Brak uprawnień!')
+        return redirect('login-view')
